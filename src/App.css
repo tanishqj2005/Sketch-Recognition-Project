@@ -38,6 +38,11 @@ nav ul li {
   transition: 0.5s;
   margin: 1em;
 }
+nav ul li a {
+  --c: goldenrod;
+  color: var(--c);
+  font-size: 16px;
+}
 
 nav ul li span {
   position: absolute;
@@ -53,6 +58,9 @@ nav ul li span {
 }
 
 nav ul li:hover {
+  color: black;
+}
+nav ul li a:hover {
   color: black;
 }
 

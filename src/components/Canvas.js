@@ -5,9 +5,11 @@ export default (props) => {
     <canvas
       style={{
         border: "4px dashed black",
+        borderRadius: 25,
+        backgroundColor:'white'
       }}
       id="canvasboard"
-      ref = {props.cvsRef}
+      ref={props.cvsRef}
     />
   );
 

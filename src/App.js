@@ -9,6 +9,8 @@ function App() {
   const lastX = useRef(0);
   const lastY = useRef(0);
 
+  const [dateUrl, setDataUrl] = useState("#");
+
   useEffect(() => {
     setCtx(cvsRef?.current?.getContext("2d"));
   }, [cvsRef, ctx]);
@@ -29,6 +31,12 @@ function App() {
     }
     ctx.clearRect(0, 0, cvsRef.current.width, cvsRef.current.height);
   }, [cvsRef, ctx]);
+
+  const handleDownload = useCallback(() => {
+    if (!cvsRef || !cvsRef.current) return;
+
+    setDataUrl(cvsRef.current.toDataURL("image/png"));
+  }, [cvsRef]);
 
   const drawOnCanvas = useCallback(
     (event) => {
@@ -59,8 +67,8 @@ function App() {
       cvsRef.current.addEventListener("mouseup", stopDrawing);
       cvsRef.current.addEventListener("mouseout", stopDrawing);
 
-      cvsRef.current.width = window.innerWidth - 296;
-      cvsRef.current.height = window.innerHeight - 160;
+      cvsRef.current.width = window.innerWidth - 200;
+      cvsRef.current.height = window.innerHeight - 100;
 
       ctx.strokeStyle = "#000";
       ctx.lineJoin = "round";
@@ -70,29 +78,48 @@ function App() {
   }, [cvsRef, ctx]);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "#eee", padding: 0 }}>
+      <div
+        style={{
+          width: "100%",
+          paddingTop: 20,
+          paddingBottom: 20,
+          textAlign: "center",
+        }}
+      >
+        <p style={{ fontSize: 30, fontWeight: 200, fontFamily: "cursive" }}>
+          Welcome to our Canvas
+        </p>
+      </div>
       <div>
         <Canvas cvsRef={cvsRef} />
       </div>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 20, paddingBottom: 20 }}>
         <nav>
           <ul>
             <li>
-              Save Image
+              <a
+                style={{ cursor: "pointer", textDecoration: "none" }}
+                download="image.png"
+                onClick={handleDownload}
+                href={dateUrl}
+              >
+                Save Image
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </a>
+            </li>
+            <li style={{ cursor: "pointer" }}>
+              Predict
               <span></span>
               <span></span>
               <span></span>
               <span></span>
             </li>
-            <li>
-              Make Prediction
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </li>
-            <li onClick={handleClear}>
-              Clear Frame
+            <li onClick={handleClear} style={{ cursor: "pointer" }}>
+              Clear
               <span></span>
               <span></span>
               <span></span>
