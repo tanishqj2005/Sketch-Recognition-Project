@@ -6,7 +6,9 @@ function App() {
   const cvsRef = useRef();
   const isDrawing = useRef(false);
   const [ctx, setCtx] = useState(null);
+  const isEraserMode = useRef(false);
   const lastX = useRef(0);
+  const [isEraser, setIsEraser] = useState(false);
   const lastY = useRef(0);
 
   const [dateUrl, setDataUrl] = useState("#");
@@ -18,7 +20,6 @@ function App() {
   const handleMouseDown = useCallback((e) => {
     isDrawing.current = true;
     [lastX.current, lastY.current] = [e.offsetX, e.offsetY];
-    console.log("Mouse Down");
   }, []);
 
   const stopDrawing = useCallback(() => {
@@ -51,10 +52,31 @@ function App() {
     },
     [ctx]
   );
+  const handleEraserClicked = (e) => {
+    if (isEraser) {
+      return;
+    }
+    isEraserMode.current = true;
+    setIsEraser(true);
+  };
+  const handleBrushClicked = (e) => {
+    if (!isEraser) {
+      return;
+    }
+    isEraserMode.current = false;
+    setIsEraser(false);
+  };
 
   const drawNormal = useCallback(
     (e) => {
       if (!isDrawing.current || !ctx) return;
+      if (isEraserMode.current) {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.lineWidth = 10;
+      } else {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.lineWidth = 7.5;
+      }
       drawOnCanvas(e);
     },
     [drawOnCanvas, ctx, isDrawing]
@@ -73,9 +95,9 @@ function App() {
       ctx.strokeStyle = "#000";
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 7.5;
     }
-  }, [cvsRef, ctx]);
+  }, [cvsRef, ctx, drawNormal, handleMouseDown, stopDrawing]);
 
   return (
     <div style={{ backgroundColor: "#eee", padding: 0 }}>
@@ -111,6 +133,13 @@ function App() {
                 <span></span>
               </a>
             </li>
+            <li onClick={handleClear} style={{ cursor: "pointer" }}>
+              Clear
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </li>
             <li style={{ cursor: "pointer" }}>
               Predict
               <span></span>
@@ -118,8 +147,31 @@ function App() {
               <span></span>
               <span></span>
             </li>
-            <li onClick={handleClear} style={{ cursor: "pointer" }}>
-              Clear
+            <li
+              onClick={handleEraserClicked}
+              style={{
+                cursor: !isEraser ? "pointer" : "not-allowed",
+                border: isEraser
+                  ? "0.3em solid maroon"
+                  : "0.3em solid goldenrod",
+              }}
+            >
+              Eraser
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </li>
+            <li
+              onClick={handleBrushClicked}
+              style={{
+                cursor: isEraser ? "pointer" : "not-allowed",
+                border: !isEraser
+                  ? "0.3em solid maroon"
+                  : "0.3em solid goldenrod",
+              }}
+            >
+              Brush
               <span></span>
               <span></span>
               <span></span>
