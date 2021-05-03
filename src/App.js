@@ -72,10 +72,10 @@ function App() {
       if (!isDrawing.current || !ctx) return;
       if (isEraserMode.current) {
         ctx.globalCompositeOperation = "destination-out";
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 6;
       } else {
         ctx.globalCompositeOperation = "source-over";
-        ctx.lineWidth = 7.5;
+        ctx.lineWidth = 2.05;
       }
       drawOnCanvas(e);
     },
@@ -89,13 +89,15 @@ function App() {
       cvsRef.current.addEventListener("mouseup", stopDrawing);
       cvsRef.current.addEventListener("mouseout", stopDrawing);
 
-      cvsRef.current.width = window.innerWidth - 200;
-      cvsRef.current.height = window.innerHeight - 100;
+      cvsRef.current.width = 640;
+      // cvsRef.current.width = window.innerWidth - 200;
+      cvsRef.current.height = 480;
+      // cvsRef.current.height = window.innerHeight - 100;
 
       ctx.strokeStyle = "#000";
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      ctx.lineWidth = 7.5;
+      ctx.lineWidth = 2.05;
     }
   }, [cvsRef, ctx, drawNormal, handleMouseDown, stopDrawing]);
 

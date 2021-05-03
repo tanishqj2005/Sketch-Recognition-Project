@@ -4,8 +4,8 @@ export default (props) => {
   const cvs = (
     <canvas
       style={{
-        border: "4px dashed black",
-        borderRadius: 25,
+        border: "4px solid black",
+        borderRadius: 0,
         backgroundColor:'white'
       }}
       id="canvasboard"
@@ -18,7 +18,7 @@ export default (props) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        paddingTop: 15,
+        paddingTop: 10,
       }}
     >
       {cvs}
