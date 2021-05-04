@@ -18,7 +18,6 @@ export default (props) => {
       style={{
         display: "flex",
         justifyContent: "center",
-        paddingTop: 10,
       }}
     >
       {cvs}

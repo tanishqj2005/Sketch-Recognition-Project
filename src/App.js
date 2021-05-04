@@ -6,10 +6,13 @@ function App() {
   const cvsRef = useRef();
   const isDrawing = useRef(false);
   const [ctx, setCtx] = useState(null);
+  const [hasDrawn, setHasDrawn] = useState(false);
   const isEraserMode = useRef(false);
   const lastX = useRef(0);
   const [isEraser, setIsEraser] = useState(false);
   const lastY = useRef(0);
+  // const [prediction, setPrediction] = useState("car");
+  const [prediction, setPrediction] = useState(null);
 
   const [dateUrl, setDataUrl] = useState("#");
 
@@ -31,6 +34,8 @@ function App() {
       return;
     }
     ctx.clearRect(0, 0, cvsRef.current.width, cvsRef.current.height);
+    setPrediction(null);
+    setHasDrawn(false);
   }, [cvsRef, ctx]);
 
   const handleDownload = useCallback(() => {
@@ -48,6 +53,7 @@ function App() {
       ctx.moveTo(lastX.current, lastY.current);
       ctx.lineTo(event.offsetX, event.offsetY);
       ctx.stroke();
+      setHasDrawn(true);
       [lastX.current, lastY.current] = [event.offsetX, event.offsetY];
     },
     [ctx]
@@ -65,6 +71,24 @@ function App() {
     }
     isEraserMode.current = false;
     setIsEraser(false);
+  };
+  const predictClicked = async () => {
+    if (!hasDrawn) {
+      return;
+    }
+    const sendValue = cvsRef.current.toDataURL();
+    const url = "http://192.168.0.4:3333/predict";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        imagestring: sendValue,
+      }),
+    });
+    const respData = await response.json();
+    setPrediction(respData["predictedclass"]);
   };
 
   const drawNormal = useCallback(
@@ -90,9 +114,7 @@ function App() {
       cvsRef.current.addEventListener("mouseout", stopDrawing);
 
       cvsRef.current.width = 640;
-      // cvsRef.current.width = window.innerWidth - 200;
       cvsRef.current.height = 480;
-      // cvsRef.current.height = window.innerHeight - 100;
 
       ctx.strokeStyle = "#000";
       ctx.lineJoin = "round";
@@ -101,13 +123,59 @@ function App() {
     }
   }, [cvsRef, ctx, drawNormal, handleMouseDown, stopDrawing]);
 
+  var returnStyle = {
+    backgroundColor: "#eee",
+    padding: 0,
+    height: window.innerHeight,
+  };
+
+  if (prediction) {
+    returnStyle = { backgroundColor: "#eee", padding: 0 };
+  }
+
+  const predictionDiv = prediction ? (
+    <div
+      style={{
+        height: 100,
+        width: window.innerWidth,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        paddingBottom:10,
+      }}
+    >
+      <div>
+        <text style={{ color: "black", fontFamily: "cursive", fontSize: 25 }}>
+          The Prediction is:
+        </text>
+      </div>
+      <div
+        style={{
+          padding: 15,
+          marginRight: 10,
+          marginLeft: 20,
+          borderRadius: 20,
+          backgroundColor: "black",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <text style={{ color: "white", fontFamily: "cursive", fontSize: 25 }}>
+          {prediction}
+        </text>
+      </div>
+    </div>
+  ) : null;
+
   return (
-    <div style={{ backgroundColor: "#eee", padding: 0 }}>
+    <div style={returnStyle}>
       <div
         style={{
           width: "100%",
-          paddingTop: 20,
-          paddingBottom: 20,
+          paddingTop: 10,
+          paddingBottom: 10,
           textAlign: "center",
         }}
       >
@@ -118,7 +186,7 @@ function App() {
       <div>
         <Canvas cvsRef={cvsRef} />
       </div>
-      <div style={{ marginTop: 20, paddingBottom: 20 }}>
+      <div style={{ marginTop: 20, paddingBottom: 0 }}>
         <nav>
           <ul>
             <li>
@@ -142,7 +210,7 @@ function App() {
               <span></span>
               <span></span>
             </li>
-            <li style={{ cursor: "pointer" }}>
+            <li onClick={predictClicked} style={{ cursor: "pointer" }}>
               Predict
               <span></span>
               <span></span>
@@ -182,6 +250,7 @@ function App() {
           </ul>
         </nav>
       </div>
+      <div>{predictionDiv}</div>
     </div>
   );
 }
