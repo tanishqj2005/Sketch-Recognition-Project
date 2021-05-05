@@ -26,6 +26,7 @@ nav ul li {
   border-radius: 0.5em;
   width: 12em;
   height: 3em;
+  background-color: whitesmoke;
   text-transform: uppercase;
   font-weight: bold;
   font-family: sans-serif;

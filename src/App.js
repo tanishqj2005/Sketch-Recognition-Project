@@ -11,7 +11,6 @@ function App() {
   const lastX = useRef(0);
   const [isEraser, setIsEraser] = useState(false);
   const lastY = useRef(0);
-  // const [prediction, setPrediction] = useState("car");
   const [prediction, setPrediction] = useState(null);
 
   const [dateUrl, setDataUrl] = useState("#");
@@ -77,7 +76,7 @@ function App() {
       return;
     }
     const sendValue = cvsRef.current.toDataURL();
-    const url = "http://192.168.0.4:3333/predict";
+    const url = "http://127.0.0.1:3333/predict";
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -126,7 +125,6 @@ function App() {
   var returnStyle = {
     backgroundColor: "#eee",
     padding: 0,
-    height: window.innerHeight,
   };
 
   if (prediction) {
@@ -142,12 +140,12 @@ function App() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
-        paddingBottom:10,
+        paddingBottom: 10,
       }}
     >
       <div>
-        <text style={{ color: "black", fontFamily: "cursive", fontSize: 25 }}>
-          The Prediction is:
+        <text style={{ color: "purple", fontFamily: "cursive", fontSize: 30 }}>
+          We think that the sketch you have drawn is a:
         </text>
       </div>
       <div
@@ -162,7 +160,7 @@ function App() {
           alignItems: "center",
         }}
       >
-        <text style={{ color: "white", fontFamily: "cursive", fontSize: 25 }}>
+        <text style={{ color: "white", fontFamily: "cursive", fontSize: 27 }}>
           {prediction}
         </text>
       </div>
@@ -179,14 +177,21 @@ function App() {
           textAlign: "center",
         }}
       >
-        <p style={{ fontSize: 30, fontWeight: 200, fontFamily: "cursive" }}>
-          Welcome to our Canvas
+        <p
+          style={{
+            fontSize: 30,
+            fontWeight: 200,
+            marginBottom: 10,
+            fontFamily: "cursive",
+          }}
+        >
+          Welcome to our <text style={{ color: "#710eab" }}>Canvas</text>
         </p>
       </div>
       <div>
         <Canvas cvsRef={cvsRef} />
       </div>
-      <div style={{ marginTop: 20, paddingBottom: 0 }}>
+      <div style={{ marginTop: 20, padding: 5 }}>
         <nav>
           <ul>
             <li>
@@ -251,6 +256,136 @@ function App() {
         </nav>
       </div>
       <div>{predictionDiv}</div>
+      <div
+        style={{
+          width: window.innerWidth,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          padding: 10,
+        }}
+      >
+        <text style={{ color: "red", fontFamily: "cursive", fontSize: 35 }}>
+          About Us
+        </text>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          padding: 10,
+        }}
+      >
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 26 }}>
+          This project is created and maintained by a group of three students
+          from Indian Institute of Technology, Jodhpur.
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 26 }}>
+          We are:
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "#d44f0d", fontFamily: "cursive", fontSize: 26 }}>
+          1. Tanishq Joshi, B Tech in EE, IIT Jodhpur.
+        </p>
+        <p style={{ color: "#d44f0d", fontFamily: "cursive", fontSize: 26 }}>
+          2. Suyash Singh, B Tech in EE, IIT Jodhpur.
+        </p>
+        <p style={{ color: "#d44f0d", fontFamily: "cursive", fontSize: 26 }}>
+          3. Shyam Sundar Meena, B Tech in EE, IIT Jodhpur.
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 26 }}>
+          This project was created as a part of the Pattern Recognition and
+          Machine Learning Course in Semester 4.
+        </p>
+      </div>
+      <div
+        style={{
+          width: window.innerWidth,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          padding: 10,
+        }}
+      >
+        <text style={{ color: "red", fontFamily: "cursive", fontSize: 35 }}>
+          Predicted Classes
+        </text>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          padding: 10,
+        }}
+      >
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 24 }}>
+          We predict 30 classes of sketches as of now. These include:
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "green", fontFamily: "cursive", fontSize: 23 }}>
+          1. bicycle 2. couch 3. blimp 4. knife 5. banana 6. pineapple
+        </p>
+        <p style={{ color: "green", fontFamily: "cursive", fontSize: 23 }}>
+          7. pretzel 8. castle 9. trumpet 10. flower 11. church 12. hourglass
+        </p>
+        <p style={{ color: "green", fontFamily: "cursive", fontSize: 23 }}>
+          13. hat 14. fan 15. spoon 16. umbrella 17. skyscraper 18. bench
+        </p>
+        <p style={{ color: "green", fontFamily: "cursive", fontSize: 23 }}>
+          17. saw 18. car_(sedan) 19. shoe 20. hamburger 21. hammer 22.
+          hot-air_balloon
+        </p>
+        <p style={{ color: "green", fontFamily: "cursive", fontSize: 23 }}>
+          25. hotdog 26. eyeglasses 27. helicopter 28. harp 29. geyser 30.
+          mushroom
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 26 }}>
+          We hope that you enjoy our little creation 😁.
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <p style={{ color: "black", fontFamily: "cursive", fontSize: 24 }}>
+          You can ping us at{" "}
+          <a style={{ color: "blue" }}>prmlproject1@gmail.com</a> for feedback.
+        </p>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+      </div>
     </div>
   );
 }
