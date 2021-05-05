@@ -76,7 +76,7 @@ function App() {
       return;
     }
     const sendValue = cvsRef.current.toDataURL();
-    const url = "http://127.0.0.1:3333/predict";
+    const url = "https://prmlproject1.herokuapp.com/predict";
     const response = await fetch(url, {
       method: "POST",
       headers: {
