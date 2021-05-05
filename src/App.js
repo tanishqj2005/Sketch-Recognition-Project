@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Loader from "react-loader-spinner";
 import Canvas from "./components/Canvas";
 import "./App.css";
 
@@ -12,6 +13,7 @@ function App() {
   const [isEraser, setIsEraser] = useState(false);
   const lastY = useRef(0);
   const [prediction, setPrediction] = useState(null);
+  const [isPredicting, setisPredicting] = useState(false);
 
   const [dateUrl, setDataUrl] = useState("#");
 
@@ -76,6 +78,7 @@ function App() {
       return;
     }
     const sendValue = cvsRef.current.toDataURL();
+    setisPredicting(true);
     const url = "https://prmlproject1.herokuapp.com/predict";
     const response = await fetch(url, {
       method: "POST",
@@ -88,6 +91,7 @@ function App() {
     });
     const respData = await response.json();
     setPrediction(respData["predictedclass"]);
+    setisPredicting(false);
   };
 
   const drawNormal = useCallback(
@@ -131,41 +135,68 @@ function App() {
     returnStyle = { backgroundColor: "#eee", padding: 0 };
   }
 
-  const predictionDiv = prediction ? (
-    <div
-      style={{
-        height: 100,
-        width: window.innerWidth,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
-        paddingBottom: 10,
-      }}
-    >
-      <div>
-        <text style={{ color: "purple", fontFamily: "cursive", fontSize: 30 }}>
-          We think that the sketch you have drawn is a:
-        </text>
-      </div>
+  var predictionDiv = null;
+
+  if (isPredicting) {
+    predictionDiv = (
       <div
         style={{
-          padding: 15,
-          marginRight: 10,
-          marginLeft: 20,
-          borderRadius: 20,
-          backgroundColor: "black",
+          height: 100,
+          width: window.innerWidth,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "row",
+          paddingBottom: 10,
         }}
       >
-        <text style={{ color: "white", fontFamily: "cursive", fontSize: 27 }}>
-          {prediction}
-        </text>
+        <Loader
+          type="ThreeDots"
+          color="#00BFFF"
+          height={100}
+          width={100}
+        />
       </div>
-    </div>
-  ) : null;
+    );
+  } else if (!isPredicting && prediction) {
+    predictionDiv = (
+      <div
+        style={{
+          height: 100,
+          width: window.innerWidth,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingBottom: 10,
+        }}
+      >
+        <div>
+          <text
+            style={{ color: "purple", fontFamily: "cursive", fontSize: 30 }}
+          >
+            We think that the sketch you have drawn is a:
+          </text>
+        </div>
+        <div
+          style={{
+            padding: 15,
+            marginRight: 10,
+            marginLeft: 20,
+            borderRadius: 20,
+            backgroundColor: "black",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <text style={{ color: "white", fontFamily: "cursive", fontSize: 27 }}>
+            {prediction}
+          </text>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={returnStyle}>
